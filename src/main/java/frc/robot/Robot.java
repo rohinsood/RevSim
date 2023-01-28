@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double rotations = SmartDashboard.getNumber("Set Rotations", 0); i kinda wanna do this with controller inputs instead
+    double rotations = SmartDashboard.getNumber("Set Rotations", 0); // i kinda wanna do this with controller inputs instead
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
