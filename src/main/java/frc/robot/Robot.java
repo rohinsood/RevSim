@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_motor;
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder m_encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
 
   private final Encoder encoder = new Encoder(0, 1);
   private final EncoderSim encoderSim = new EncoderSim(encoder);
@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
     kFF = 0;
     kMaxOutput = 1;
     kMinOutput = -1;
+    maxRPM = 5700;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -115,7 +116,7 @@ public class Robot extends TimedRobot {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+    //double rotations = SmartDashboard.getNumber("Set Rotations", 0); i kinda wanna do this with controller inputs instead
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
@@ -159,7 +160,8 @@ public class Robot extends TimedRobot {
      * com.revrobotics.CANSparkMax.ControlType.kVelocity
      * com.revrobotics.CANSparkMax.ControlType.kVoltage
      */
-    // m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+    double rotations = m_stick.getY() * maxRPM; 
+    m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
 
     
     
