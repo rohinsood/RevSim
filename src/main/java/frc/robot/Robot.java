@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+    double rotations = SmartDashboard.getNumber("Set Rotations", 0); i kinda wanna do this with controller inputs instead
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
@@ -158,8 +158,8 @@ public class Robot extends TimedRobot {
     m_encoder.setPosition(realPIDContrller.calculate(m_encoder.getPosition(), rotations));
     // m_pidController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     
-    SmartDashboard.putNumber("SetPoint", rotations);
-    SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
+    // SmartDashboard.putNumber("SetPoint", rotations);
+    // SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
   }
 
   @Override
