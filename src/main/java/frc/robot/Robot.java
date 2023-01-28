@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -37,7 +38,9 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_motor;
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder m_encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRotation;
+
+  PIDController realPIDContrller;
 
   private final Encoder encoder = new Encoder(0, 1);
   private final EncoderSim encoderSim = new EncoderSim(encoder);
@@ -54,21 +57,8 @@ public class Robot extends TimedRobot {
     // initialize motor
     m_motor = new CANSparkMax(deviceID, MotorType.kBrushless);
 
-    /**
-     * The RestoreFactoryDefaults method can be used to reset the configuration
-     * parameters
-     * in the SPARK MAX to their factory default state. If no argument is passed,
-     * these
-     * parameters will not persist between power cycles
-     */
     m_motor.restoreFactoryDefaults();
 
-    /**
-     * In order to use PID functionality for a controller, a SparkMaxPIDController
-     * object
-     * is constructed by calling the getPIDController() method on an existing
-     * CANSparkMax object
-     */
     m_pidController = m_motor.getPIDController();
 
     // Encoder object created to display position values
@@ -76,12 +66,15 @@ public class Robot extends TimedRobot {
 
     // PID coefficients
     kP = 0.1;
-    kI = 1e-4;
-    kD = 1;
+    kI = 0;
+    kD = 0;
     kIz = 0;
     kFF = 0;
     kMaxOutput = 1;
     kMinOutput = -1;
+    maxRotation = 42;
+
+    realPIDContrller = new PIDController(kP, kI, kD);
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -159,9 +152,11 @@ public class Robot extends TimedRobot {
      * com.revrobotics.CANSparkMax.ControlType.kVelocity
      * com.revrobotics.CANSparkMax.ControlType.kVoltage
      */
-    // m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
 
-    
+    // double setpoint = m_stick.getY() * maxRotation;
+    // SmartDashboard.putNumber("setpt", setpoint);
+    m_encoder.setPosition(realPIDContrller.calculate(m_encoder.getPosition(), rotations));
+    // m_pidController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     
     SmartDashboard.putNumber("SetPoint", rotations);
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
